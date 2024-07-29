@@ -1,0 +1,272 @@
+public class cau2 extends AppCompatActivity {
+    private ArrayList<DanhBa> danhbalist;
+    private ArrayAdapter<DanhBa> adapter;
+    public int chon =-1;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_cau2);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        Button btnthem =findViewById(R.id.btnthem);
+        Button btnxoa =findViewById(R.id.btnxoa);
+        Button btnsua =findViewById(R.id.btnsua);
+        Button btnchitiet =findViewById(R.id.btnchitiet);
+        EditText txtten =findViewById(R.id.txtten);
+        EditText txtsdt =findViewById(R.id.txtsdt);
+        ListView lvdanhba =findViewById(R.id.lvdanhba);
+        danhbalist = new ArrayList<>();
+        danhbalist.add(new DanhBa("Nguyen huu dat","111111 "));
+        danhbalist.add(new DanhBa("Nguyen dat","11111"));
+        danhbalist.add(new DanhBa("Nguyễn Văn C", "1111"));
+        danhbalist.add(new DanhBa("Phan Thị D", "1111"));
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, danhbalist);
+        lvdanhba.setAdapter(adapter);
+        btnthem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String ten = txtten.getText().toString();
+                String sdt = txtsdt.getText().toString();
+
+                if(!ten.isEmpty() && !sdt.isEmpty()){
+                    DanhBa danhBa = new DanhBa(ten,sdt);
+                    danhbalist.add(danhBa);
+                    adapter.notifyDataSetChanged();
+                    txtten.setText("");
+                    txtsdt.setText("");
+                }
+
+            }
+        });
+        // Xử lý sự kiện long click để gọi điện thoại
+        lvdanhba.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                DanhBa danhBa =danhbalist.get(i);
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + danhBa.getSdt()));
+                startActivity(intent);
+                return true;
+            }
+        });
+        // Xử lý sự kiện click để chọn một mục
+        lvdanhba.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                chon=i;
+            }
+        });
+        // Xử lý sự kiện click vào nút Xóa để xóa mục đã chọn
+        btnxoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(chon != -1){
+                    danhbalist.remove(chon);
+                    adapter.notifyDataSetChanged();
+                    chon = -1;
+                    Toast.makeText(cau2.this, "ban da xoa thanh cong", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        btnchitiet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(chon != -1){
+                    DanhBa chitiet = danhbalist.get(chon);
+                    Intent intent = new Intent(cau2.this , manhinh.class);
+                    intent.putExtra("ten",chitiet.getTen());
+                    intent.putExtra("So dien thoai",chitiet.getSdt());
+                    startActivity(intent);
+                }
+            }
+        });
+        btnsua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (chon == -1) {
+                    Toast.makeText(cau2.this, "Vui lòng chọn nhân viên", Toast.LENGTH_SHORT).show();
+                }
+                else if (txtten.getText().toString().isEmpty() || txtsdt.getText().toString().isEmpty()) {
+                    Toast.makeText(cau2.this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    danhbalist.get(chon).setTen(txtten.getText().toString());
+                    danhbalist.get(chon).setSdt(txtsdt.getText().toString());
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(cau2.this, "Cập nhật thành công nhân viên\n" + chon, Toast.LENGTH_SHORT).show();
+                    txtten.setText("");
+                    txtsdt.setText("");
+                    chon = -1;
+                }
+
+            }
+        });
+
+màn 2 
+private RadioGroup gioitinh;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_manhinh2);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        chose=findViewById(R.id.chose);
+        Java=findViewById(R.id.Java);
+        C=findViewById(R.id.C);
+        And=findViewById(R.id.And);
+        nam=findViewById(R.id.nam);
+        nu=findViewById(R.id.nu);
+        gioitinh=findViewById(R.id.gioitinh);
+        next =findViewById(R.id.next);
+        exit=findViewById(R.id.exit);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(manhinh2.this , manhinh3.class);
+                startActivity(intent);
+            }
+        });
+        chose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    int chon =gioitinh.getCheckedRadioButtonId();
+                    String luachon =((RadioButton) findViewById(chon)).getText().toString();
+                //StringBuilder mon = new StringBuilder();
+                    String kq = "";
+                    if(Java.isChecked()){
+                        kq += "Java ";
+                        //mon.append("Java");
+                    }else if(C.isChecked()){
+                        kq += "C# ";
+                        //mon.append("C#");
+
+                    }else if ( And.isChecked()){
+                       kq += "Android ";
+                        //mon.append("Android");
+                    }
+                    String ketqua = " Mon hoc "+ kq +" Gioi tinh  " +luachon;
+                Toast.makeText(manhinh2.this, ketqua, Toast.LENGTH_SHORT).show();
+
+mà 3
+ublic class manhinh3 extends AppCompatActivity {
+    private ListView listview;
+    private TextView text;
+    private Button next2;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_manhinh3);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        listview =findViewById(R.id.listview);
+        text=findViewById(R.id.text);
+        next2=findViewById(R.id.next2);
+        ArrayList<String>list= new ArrayList<>();
+        list.add("tao");
+        list.add("cam");
+        list.add("xoai");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(manhinh3.this, "Ban da chon : "+ list.get(i), Toast.LENGTH_SHORT).show();
+            }
+        });
+mà 4
+
+private ListView lstjson;
+private Teacheradaptert teacheradaptert;
+private List<Teacher> teacherList;
+private Button btnHienthi;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_manhinh4);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+        lstjson=findViewById(R.id.lstjson);
+        btnHienthi=findViewById(R.id.btnHienthi);
+        teacherList = new ArrayList<>();
+        teacheradaptert = new Teacheradaptert(this, teacherList);
+        lstjson.setAdapter(teacheradaptert);
+        btnHienthi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            displayData();
+            }
+        });
+
+    }
+    private void displayData() {
+        String jsonData = "[{\"macb\":\"CB01\",\"hoten\":\"Nguyen Huu Dat\"}," +
+                "{\"macb\":\"CB02\",\"hoten\":\"Nguyen Nam Hai\"}," +
+                "{\"macb\":\"CB03\",\"hoten\":\"Vo Truong Giang \"}]";
+
+            try {
+                JSONArray arr= new JSONArray(jsonData);
+                teacherList.clear();
+
+                for (int i = 0; i < arr.length();i++){
+                    JSONObject job = arr.getJSONObject(i);
+                    String macb = job.getString("macb");
+                    String hoten = job.getString("hoten");
+                    Teacher teacher = new Teacher(macb, hoten);
+                    teacherList.add(teacher);
+                }
+                teacheradaptert.notifyDataSetChanged();
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+ADAPTER 
+public class Teacheradaptert extends BaseAdapter {
+    private Context context;
+    private List<Teacher> teacherList;
+
+    public Teacheradaptert(Context context, List<Teacher> teacherList) {
+        this.context = context;
+        this.teacherList = teacherList;
+    }
+    @Override
+    public int getCount() {
+        return teacherList.size();
+    }
+
+    @Override
+    public Object getItem(int i) {
+        return teacherList.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+        Teacher sv= teacherList.get(i);
+        view = inflater.inflate(R.layout.item_canbo, viewGroup,false);
+        TextView macb =view.findViewById(R.id.magv);
+        macb.setText("Mã Cb : "+sv.getMacb());
+        TextView hoten = view.findViewById(R.id.hoten);
+        hoten.setText("Họ tên : "+sv.getHoten());

@@ -1,3 +1,46 @@
+ADD MENU
+public class man2 extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_man2);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // Set up the toolbar
+        Toolbar toolbar = findViewById(R.id.tb);
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.album){
+            Intent intent = new Intent(man2.this, man3.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.dsbaihat) {
+            Intent intent = new Intent(man2.this, man3.class);
+            startActivity(intent);
+        }else if (item.getItemId() == R.id.casi) {
+            Intent intent = new Intent(man2.this, man3.class);
+            startActivity(intent);
+        }else if(item.getItemId() == R.id.exit){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}
+
+
 ĐĂNg NHẬP
 public class MainActivity extends AppCompatActivity {
 
